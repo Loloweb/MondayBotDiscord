@@ -1,6 +1,5 @@
-import discord, asyncio, os
-from discord.ext import commands, tasks
-import time
+import discord, time
+from discord.ext import tasks
 from tokenfolder import secret
 
 intents = discord.Intents.default()
@@ -20,7 +19,7 @@ async def monday(client):
         await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="Monday!"))
         # check if midnight
         if time.strftime("%H", time.gmtime()) == "00":
-            channel = client.get_channel(239054461656498177)
+            channel = client.get_channel(729426983699742791) #update-avenue
             message = "Monday!"
             await channel.send(message)
             print(f'Monday delivered.')
