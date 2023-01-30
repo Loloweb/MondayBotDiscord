@@ -19,7 +19,7 @@ async def monday(client):
     if time.strftime("%A", time.gmtime()) == "Monday":
         await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="Monday!"))
         # check if midnight
-        if time.strftime("%H", time.gmtime()) == "20":
+        if time.strftime("%H", time.gmtime()) == "00":
             channel = client.get_channel(239054461656498177)
             message = "Monday!"
             await channel.send(message)
