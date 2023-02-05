@@ -1,4 +1,4 @@
-import discord, time
+import discord, time, logging
 from discord.ext import tasks
 from discord import app_commands
 from tokenfolder import secret
@@ -8,6 +8,7 @@ client = discord.Client(intents=intents)
 tree = app_commands.CommandTree(client)
 id = 552886687118655489 # Change this in case different server
 channel = 729426983699742791 # Change this if different channel
+handler = logging.FileHandler(filename='bot.log', encoding='utf-8', mode='w')
 
 @client.event
 async def on_ready():
@@ -38,4 +39,4 @@ async def monday(client):
     else:
         await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=None))
 
-client.run(secret.secrettoken)
+client.run(secret.secrettoken, log_handler=handler, log_level=logging.DEBUG, reconnect=True )
