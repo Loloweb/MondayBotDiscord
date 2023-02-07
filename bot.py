@@ -18,18 +18,22 @@ async def on_ready():
     print(f'today is {time.strftime("%A", time.gmtime())}')
     monday.start(client)
 
-@tree.command(name = "monday", description = "Is it Monday yet?", guild=discord.Object(id)) #Add the guild ids in which the slash command will appear. If it should be in all, remove the argument, but note that it will take some time (up to an hour) to register the command if it's for all guilds.
-async def first_command(interaction):
+@tree.command(name = "monday", description = "Is it Monday yet?", guild=discord.Object(id))
+async def check_monday(interaction):
     if time.strftime("%A", time.gmtime()) == "Monday":
         await interaction.response.send_message("Monday!")
     else:
-        await interaction.response.send_message("It's not Monday.", ephemeral=False)
+        await interaction.response.send_message("It's not Monday.", ephemeral=False) # make this ephemeral when bossman feels like it
+
+@tree.command(name="gmtime", description="What time is it? (GMT) (England) (Where Bloops is)", guild=discord.Object(id))
+async def check_time(interaction):
+    await interaction.response.send_message(f"It's {time.strftime('%H:%M:%S', time.gmtime())} GMT", ephemeral=True)
 
 @tasks.loop(hours=1)
 async def monday(client):
     # check if monday
     if time.strftime("%A", time.gmtime()) == "Monday":
-        await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="Monday!"))
+        await client.change_presence(activity=discord.Activity(type=discord.ActivityType.streaming, name="Monday!"))
         # check if midnight
         if time.strftime("%H", time.gmtime()) == "00":
             client.get_channel(channel) # Change to desired channel
@@ -37,6 +41,6 @@ async def monday(client):
             await channel.send(message)
             print(f'Monday delivered.')
     else:
-        await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=None))
+        await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="for Mondays..."))
 
 client.run(secret.secrettoken, log_handler=handler, log_level=logging.DEBUG, reconnect=True )
