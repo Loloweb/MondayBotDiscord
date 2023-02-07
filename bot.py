@@ -6,8 +6,8 @@ from tokenfolder import secret
 intents = discord.Intents.default()
 client = discord.Client(intents=intents)
 tree = app_commands.CommandTree(client)
-id = 552886687118655489 # Change this in case different server
-channel = 729426983699742791 # Change this if different channel
+id = 552886687118655489 # Change this if different server. Currently Bloops'
+channel = 729426983699742791 # Change this if different channel. Currently update-avenue
 handler = logging.FileHandler(filename='bot.log', encoding='utf-8', mode='w')
 
 @client.event
@@ -23,7 +23,7 @@ async def first_command(interaction):
     if time.strftime("%A", time.gmtime()) == "Monday":
         await interaction.response.send_message("Monday!")
     else:
-        await interaction.response.send_message("It's not Monday.", ephemeral=True)
+        await interaction.response.send_message("It's not Monday.", ephemeral=False)
 
 @tasks.loop(hours=1)
 async def monday(client):
@@ -32,7 +32,7 @@ async def monday(client):
         await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="Monday!"))
         # check if midnight
         if time.strftime("%H", time.gmtime()) == "00":
-            channel = client.get_channel(channel) # Change to desired channel
+            client.get_channel(channel) # Change to desired channel
             message = "Monday!"
             await channel.send(message)
             print(f'Monday delivered.')
