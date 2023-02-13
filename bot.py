@@ -9,12 +9,13 @@ tree = app_commands.CommandTree(client)
 id = 552886687118655489 # Change this if different server. Currently Bloops'
 channel = 729426983699742791 # Change this if different channel. Currently update-avenue
 handler = logging.FileHandler(filename='bot.log', encoding='utf-8', mode='w')
+starttime = time.strftime("%H:%M:%S", time.gmtime())
 
 @client.event
 async def on_ready():
     await tree.sync(guild=discord.Object(id))
     print(f'Bot connected as {client.user}')
-    print(f'UTC time is {time.strftime("%H:%M:%S", time.gmtime())}')
+    print(f'UTC time is {starttime}')
     print(f'today is {time.strftime("%A", time.gmtime())}')
     monday.start(client)
 
@@ -29,6 +30,10 @@ async def check_monday(interaction):
 async def check_time(interaction):
     await interaction.response.send_message(f"It's {time.strftime('%H:%M:%S', time.gmtime())} GMT", ephemeral=True)
 
+@tree.command(name="checksync", description="Check the time the bot was started on.", guild=discord.Object(id))
+async def check_sync(interaction):
+    await interaction.response.send_message(f"Bot started at {starttime} GMT. Should the bot stay up until then, Monday will be dropped around 00:{time.strftime('%M:%S', starttime)} next Monday.", ephemeral=True)
+
 @tasks.loop(hours=1)
 async def monday(client):
     # check if monday
@@ -36,9 +41,9 @@ async def monday(client):
         await client.change_presence(activity=discord.Activity(type=discord.ActivityType.streaming, name="Monday!"))
         # check if midnight
         if time.strftime("%H", time.gmtime()) == "00":
-            client.get_channel(channel) # Change to desired channel
+            monday = client.get_channel(channel) # Change to desired channel
             message = "Monday!"
-            await channel.send(message)
+            await monday.send(message)
             print(f'Monday delivered.')
     else:
         await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="for Mondays..."))
